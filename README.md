@@ -10,7 +10,7 @@ This is the **Astro adaptation** of the user-supplied **SATRN News v2 WordPress 
 - JANUS Intelligence dark module, SATRN Audio, Daily Brief newsletter presentation and a separate SATRN.TV network bridge.
 - Static article templates, editorial metadata, mobile navigation, newsroom search and digital newspaper index.
 
-**Important visual note:** The original ZIP contains a WordPress theme screenshot (a brand graphic) but not a separate transparent logo asset. The Astro masthead currently uses a CSS-rendered approximation of the SATRN logo. Swap it for an approved original transparent SATRN News logo before final launch.
+**Important visual note:** The original ZIP contains a WordPress theme screenshot (a brand graphic) but not a separate transparent logo asset. The Astro masthead now includes a vector adaptation from the supplied SATRN logo; the approved desktop design remains the visual reference.
 
 ## Development
 
@@ -84,4 +84,9 @@ SATRN News © 2026. All rights reserved; no open-source license granted.
 - Storage: private Dropbox originals; approved derivatives on Cloudflare R2; public site on Cloudflare Workers.
 - Architecture and workflows: docs/STORAGE_ARCHITECTURE.md, docs/EDITORIAL_WORKFLOW.md, docs/CONTENT_SCHEMAS.md.
 
-This is a static approved-release workflow, NOT yet a multi-user authentication system or continuously scheduled publishing agent. The Dropbox folder tree and R2 storage bucket have not yet been created. Configure GitHub branch protection to enforce editorial review.
+This is a static approved-release workflow, NOT yet a multi-user authentication system or continuously scheduled publishing agent. Dropbox editorial subfolders were created and verified on October 28, 2026. An R2 bucket and public media domain have NOT yet been created. Configure GitHub branch protection to enforce editorial review.
+
+
+## v0.3 R2 media preparation
+
+A dry-run validation utility has been added at scripts/r2-media.mjs. It checks editor signoff, file rights, SHA256 fingerprints and immutable keys. Actual R2 upload requires both --upload and SATRN_R2_PUBLISH=APPROVED in a locally authenticated Cloudflare session. See docs/R2_MEDIA_PUBLISHING.md. No media has been uploaded and no bucket has been created by this change.
