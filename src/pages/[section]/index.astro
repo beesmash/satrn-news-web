@@ -2,25 +2,26 @@
 import Layout from '../../layouts/SiteLayout.astro';
 import StoryCard from '../../components/StoryCard.astro';
 import articles from '../../data/articles.json';
-import { sections, storyBelongsTo } from '../../data/sections.js';
-export function getStaticPaths() {
+import {sections,storyBelongsTo} from '../../data/sections.js';
+import {publishedArticles} from '../../lib/publication.mjs';
+export function getStaticPaths(){
  const policies=[
- ['contact','Contact','Editorial contact information will be published after the newsroom contact channel is verified.'],
- ['editorial-standards','Editorial Standards','SATRN News requires attribution, independent verification and editorial approval before publication. A full editorial policy is being prepared.'],
- ['corrections-policy','Corrections Policy','A formal corrections process and contact channel will be published before public launch.'],
- ['ai-automation-disclosure','AI & Automation Disclosure','AI systems may assist with research, writing, editing and production. All publishable reports require accountable human review, source verification and approval.'],
- ['privacy-policy','Privacy Policy','The full privacy policy will be published before launch. This staging website does not collect newsletter subscriptions.'],
- ['government-resources','Government Resources','A curated index of official United States government resources is planned.']
-];
- return [...sections,['investigations','Investigations'],['world','World News'],['politics','U.S. Politics'],...policies.map(([slug,name])=>[slug,name])]
-  .map(([slug,name])=>({params:{section:slug},props:{name,filterSlug: slug==='world'?'world-news':slug==='politics'?'us-politics':slug,policyDescription:policies.find(p=>p[0]===slug)?.[2]}}));
+ ["contact","Contact","Editorial contact information will be published after the newsroom contact channel is verified."],
+ ["editorial-standards","Editorial Standards","SATRN News requires attribution, independent verification, and editorial approval before publication. A full public editorial policy is in preparation."],
+ ["corrections-policy","Corrections Policy","SATRN News is developing a corrections and retractions policy and an accessible reporting channel before public launch."],
+ ["ai-automation-disclosure","AI & Automation Disclosure","AI systems may assist with research, editing and production. Public reporting requires accountable editorial review, verification and approval."],
+ ["privacy-policy","Privacy Policy","The website privacy policy will be published before full launch. Newsletter signups are disabled on this staging site."],
+ ["government-resources","Government Resources","A curated collection of official government information sources is planned."]
+ ];
+ return [...sections,["investigations","Investigations"],["world","World News"],["politics","U.S. Politics"],...policies.map(([slug,name])=>[slug,name])]
+ .map(([slug,name])=>({params:{section:slug},props:{name,filterSlug:slug==="world"?"world-news":slug==="politics"?"us-politics":slug,policyDescription:policies.find(p=>p[0]===slug)?.[2]}}));
 }
 const {name,filterSlug,policyDescription}=Astro.props;
-const items = articles.filter(a=>a.status==='published' && storyBelongsTo(a,filterSlug)).sort((a,b)=>b.date.localeCompare(a.date));
+const items=publishedArticles(articles).filter(a=>storyBelongsTo(a,filterSlug));
 ---
-<Layout title={name} active={'/'+Astro.params.section+'/'}><div class="container archive-header">
- <div class="kicker">SATRN NEWS · {policyDescription?'INFORMATION':'REPORTING DESK'}</div>
- <h1>{name}</h1><p>{policyDescription || 'Independent reporting, original analysis and context from SATRN News.'}</p>
- </div>
- {!policyDescription && <div class="container section archive-content">{items.length>0?<div class="cards-5">{items.map(a=><StoryCard article={a}/>)}</div>:<div class="launch-note"><strong>{name} coverage in preparation.</strong><p>No reporting has been approved for publication in this section yet.</p><a href="/news/">Browse all news →</a></div>}</div>}
+<Layout title={name} active={'/'+Astro.params.section+'/'}>
+ <div class="page-container archive-header"><div class="kicker">SATRN NEWS · {policyDescription?"INFORMATION":"REPORTING DESK"}</div>
+ <h1>{name}</h1><p>{policyDescription||"Independent reporting, original analysis and global context from SATRN News."}</p></div>
+ {!policyDescription&&<div class="page-container archive-content">{items.length>0?<div class="cards-5">{items.map(a=><StoryCard article={a}/>)}</div>:
+ <div class="launch-note"><strong>{name} reporting in preparation.</strong><p>No articles have been approved for public release in this section.</p><a href="/news/">Browse the newsroom →</a></div>}</div>}
 </Layout>

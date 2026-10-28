@@ -1,0 +1,31 @@
+---
+import Layout from '../../layouts/SiteLayout.astro';
+import editions from '../../data/editions.json';
+import {publishedEditions,dateLabel} from '../../lib/publication.mjs';
+export function getStaticPaths(){
+ return publishedEditions(editions).map(issue=>({params:{slug:issue.slug},props:{issue}}));
+}
+const {issue}=Astro.props;
+const pages=issue.pageImages||[];
+---
+<Layout title={issue.title} description={issue.summary}>
+ <div class="page-container edition-breadcrumb"><a href="/">Home</a><span>/</span><a href="/newspapers/">Digital Newspapers</a><span>/</span><span>{dateLabel(issue.date)}</span></div>
+ <header class="page-container edition-header">
+  <div class="kicker">{issue.type.replaceAll("-"," ").toUpperCase()} · SATRN NEWS</div><h1>{issue.title}</h1>
+  <p>{issue.summary}</p>
+  <div class="edition-details"><span><strong>{issue.pages}</strong> total pages</span><span>{dateLabel(issue.date)}</span><span>Approved by {issue.review.approvedBy}</span></div>
+  <div class="edition-actions">{issue.pdfUrl&&<a class="edition-button" href={issue.pdfUrl} target="_blank" rel="noopener noreferrer">Read complete PDF ↗</a>}<a class="edition-link" href="/newspapers/">← All editions</a></div>
+ </header>
+ <main class="page-container newspaper-reader">
+ {pages.length>0?
+ <><div class="newspaper-reader-heading"><h2>Read the complete issue</h2><p>Each newspaper page is presented separately, in the original reading order.</p></div>
+ <nav class="page-jumps" aria-label="Jump to newspaper page">{pages.map((p,i)=><a href={'#paper-page-'+(i+1)}>{String(i+1).padStart(2,"0")}</a>)}</nav>
+ <div class="newspaper-page-list">{pages.map((url,i)=><figure class="newspaper-page" id={'paper-page-'+(i+1)}>
+  <div class="page-label"><strong>PAGE {String(i+1).padStart(2,"0")}</strong><span>{i+1} of {issue.pages}</span></div>
+  <a href={url} target="_blank" rel="noopener noreferrer" aria-label={'Open full size newspaper page '+(i+1)}>
+   <img src={url} alt={'SATRN News '+issue.title+', newspaper page '+(i+1)+' of '+issue.pages} loading={i===0?"eager":"lazy"} decoding="async"/>
+  </a><figcaption>Page {i+1} · Select image to view the original size.</figcaption>
+ </figure>)}</div></>:
+ <div class="newspaper-pdf-only"><h2>Complete PDF edition</h2><p>This issue is available as a complete PDF. Individual page images are not yet supplied.</p>{issue.pdfUrl&&<a class="edition-button" href={issue.pdfUrl} target="_blank" rel="noopener noreferrer">Open newspaper PDF ↗</a>}</div>}
+ </main>
+</Layout>

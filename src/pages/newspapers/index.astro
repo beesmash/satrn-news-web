@@ -1,9 +1,38 @@
 ---
 import Layout from '../../layouts/SiteLayout.astro';
 import editions from '../../data/editions.json';
-const published=editions.filter(e=>e.status==='published').sort((a,b)=>b.date.localeCompare(a.date));
+import {publishedEditions,editionPath,dateLabel} from '../../lib/publication.mjs';
+const released=publishedEditions(editions);
+const categories=[["all","All Editions"],["daily-source","Daily Source"],["special-investigation","Investigations"],["special-edition","Special Editions"]];
 ---
 <Layout title="Digital Newspapers" active="/newspapers/">
-<div class="container archive-header"><div class="kicker">SATRN DAILY SOURCE · SPECIAL INVESTIGATIONS</div><h1>Digital Newspaper Archive</h1><p>Complete daily issues and investigative editions, preserved with their original page layouts.</p></div>
-<div class="container section archive-content">{published.length>0?<div class="cards-3">{published.map(e=><article class="news-card edition-card"><div class="kicker">{e.date} · {e.pages} PAGES</div><h3>{e.title}</h3><p>{e.summary}</p><a href={e.url} target="_blank" rel="noopener noreferrer">Read complete edition ↗</a></article>)}</div>:<div class="launch-note"><strong>SATRN News digital editions will appear here.</strong><p>The Daily Source archive and original newspaper page designs will be imported after verification.</p></div>}</div>
+ <div class="page-container archive-header"><div class="kicker">SATRN DAILY SOURCE · INVESTIGATIVE EDITIONS</div>
+ <h1>Digital Newspaper Archive</h1>
+ <p>Read complete SATRN News daily newspapers and special investigation editions, preserving the original page layouts.</p></div>
+ <div class="page-container archive-content">
+ <div class="edition-archive-overview"><div><strong>{released.length}</strong><span>Released Editions</span></div><div><strong>{released.reduce((n,e)=>n+e.pages,0)}</strong><span>Published Pages</span></div><div><strong>{new Set(released.map(e=>e.date.slice(0,4))).size}</strong><span>Archive Years</span></div></div>
+ {released.length>0?
+ <><div class="archive-filters" aria-label="Newspaper type filters">{categories.map(([value,label])=><button type="button" class="filter-chip" data-edition-filter={value} aria-pressed={value==="all"?"true":"false"}>{label}</button>)}</div>
+ <div class="edition-grid">{released.map(issue=><article class="edition-tile" data-edition-type={issue.type}>
+  <a class="edition-cover" href={editionPath(issue.slug)}>
+   {issue.cover?<img src={issue.cover} alt={'Cover of '+issue.title} loading="lazy"/>:<div class="edition-cover-placeholder"><img src="/satrn-news-logo-light.svg" alt=""/><span>{issue.type.replaceAll("-"," ").toUpperCase()}</span><strong>{dateLabel(issue.date)}</strong><small>{issue.pages} PAGES</small></div>}
+  </a>
+  <div class="edition-tile-body"><div class="kicker">{issue.type.replaceAll("-"," ")} · {dateLabel(issue.date)}</div><h2><a href={editionPath(issue.slug)}>{issue.title}</a></h2><p>{issue.summary}</p><a class="archive-read-link" href={editionPath(issue.slug)}>Read full issue →</a></div>
+ </article>)}</div><p class="filter-empty" id="edition-empty" hidden>No issues match that category.</p></>:
+ <div class="launch-note archive-start"><strong>The SATRN Daily Source archive is ready to receive approved editions.</strong>
+ <p>No complete newspaper has been imported into this website yet. Original newspaper masters belong in private editorial storage; approved page images and PDF copies will be delivered from Cloudflare media storage.</p>
+ <p>As each edition is approved and uploaded, it will appear here with a cover, dated issue details, complete page viewer and PDF access when available.</p></div>}
+ </div>
+ {released.length>0&&<script>
+ const filters=document.querySelectorAll("[data-edition-filter]");
+ const issues=document.querySelectorAll("[data-edition-type]");
+ const empty=document.getElementById("edition-empty");
+ filters.forEach(btn=>btn.addEventListener("click",()=>{
+  const selection=btn.getAttribute("data-edition-filter");
+  filters.forEach(other=>other.setAttribute("aria-pressed",String(other===btn)));
+  let count=0;
+  issues.forEach(issue=>{const match=selection==="all"||issue.getAttribute("data-edition-type")===selection;issue.hidden=!match;if(match)count++;});
+  if(empty)empty.hidden=count!==0;
+ }));
+ </script>}
 </Layout>

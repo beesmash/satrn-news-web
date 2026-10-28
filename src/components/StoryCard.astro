@@ -1,13 +1,15 @@
 ---
-const { article } = Astro.props;
-const href = '/news/' + article.slug + '/';
+import {articlePath,dateLabel} from '../lib/publication.mjs';
+const {article}=Astro.props;
+const href=articlePath(article.slug);
 ---
 <article class="news-card">
  <a class="thumb" href={href} aria-label={'Read '+article.title}>
-  {article.image ? <img src={article.image} alt={article.imageAlt || ''} loading="lazy" /> : <span class="thumb-fallback" aria-hidden="true">SATRN NEWS</span>}
+  {article.image?<img src={article.image} alt={article.imageAlt||''} loading="lazy" decoding="async"/>:
+  <span class="thumb-fallback" aria-hidden="true">SATRN NEWS</span>}
  </a>
- <div class="kicker">{article.category}</div>
+ <div class="kicker">{article.category} · {article.storyType||"News"}</div>
  <h3><a href={href}>{article.title}</a></h3>
- <div class="meta">{article.date} · {article.storyType || 'News'}</div>
- {article.summary && <p>{article.summary}</p>}
+ <div class="meta">{dateLabel(article.publishAt||article.date)} · {article.author}</div>
+ {article.summary&&<p>{article.summary}</p>}
 </article>

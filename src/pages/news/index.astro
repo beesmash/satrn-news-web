@@ -2,6 +2,29 @@
 import Layout from '../../layouts/SiteLayout.astro';
 import StoryCard from '../../components/StoryCard.astro';
 import articles from '../../data/articles.json';
-const published = articles.filter(a=>a.status === 'published').sort((a,b)=>b.date.localeCompare(a.date));
+import {publishedArticles} from '../../lib/publication.mjs';
+const published=publishedArticles(articles);
+const categories=[...new Set(published.map(a=>a.category))];
 ---
-<Layout title="Latest News" active="/news/"><div class="container archive-header"><div class="kicker">SATRN NEWSROOM</div><h1>Latest News</h1><p>Independent reporting, international affairs, finance, investigations and technology.</p></div><div class="container section archive-content">{published.length > 0?<div class="cards-5">{published.map(a=><StoryCard article={a}/>)}</div>:<div class="launch-note"><strong>Editorial content is being prepared.</strong><p>Published and verified SATRN News reporting will appear here.</p></div>}</div></Layout>
+<Layout title="Latest News" active="/news/">
+ <div class="page-container archive-header"><div class="kicker">SATRN NEWSROOM · PUBLICATION ARCHIVE</div>
+ <h1>Latest News</h1><p>Approved reporting, analysis and investigations from the SATRN News editorial desks.</p></div>
+ <div class="page-container section archive-content">
+ {published.length>0?
+ <><div class="news-archive-toolbar"><span>{published.length} published reports</span><label for="news-filter">Desk <select id="news-filter"><option value="all">All reporting</option>{categories.map(c=><option value={c}>{c}</option>)}</select></label></div>
+ <div class="cards-5 news-archive-grid">{published.map(a=><div data-news-category={a.category}><StoryCard article={a}/></div>)}</div>
+ <p class="filter-empty" id="news-empty" hidden>No published reports match this desk.</p></>:
+ <div class="launch-note"><strong>Publishing infrastructure is operational.</strong>
+ <p>The public catalog currently contains no editor-approved reports. Illustrative homepage headlines are design samples only and do not appear here.</p>
+ <p>Approved articles will be published automatically from the validated editorial catalog after a reviewed GitHub release.</p></div>}
+ </div>
+ {published.length>0&&<script>
+ const filter=document.getElementById("news-filter");
+ const cards=[...document.querySelectorAll("[data-news-category]")];
+ filter?.addEventListener("change",()=>{
+  let count=0;
+  cards.forEach(card=>{const show=filter.value==="all"||card.getAttribute("data-news-category")===filter.value;card.hidden=!show;if(show)count++;});
+  document.getElementById("news-empty").hidden=count!==0;
+ });
+ </script>}
+</Layout>

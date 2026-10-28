@@ -1,20 +1,38 @@
 ---
 import Layout from '../../layouts/SiteLayout.astro';
+import StoryCard from '../../components/StoryCard.astro';
 import articles from '../../data/articles.json';
-export function getStaticPaths(){
- return articles.filter(a=>a.status==='published').map(a=>({params:{slug:a.slug},props:{article:a}}));
+import {publishedArticles,articlePath,dateLabel} from '../../lib/publication.mjs';
+export function getStaticPaths() {
+ const published=publishedArticles(articles);
+ return published.map(article=>({params:{slug:article.slug},props:{article,related:published.filter(other=>other.slug!==article.slug&&other.category===article.category).slice(0,3)}}));
 }
-const {article}=Astro.props;
+const {article,related=[]}=Astro.props;
+const publicationDate=dateLabel(article.publishAt||article.date);
 ---
-<Layout title={article.title} description={article.summary}>
-<div class="container article-shell"><article class="article">
- <div class="kicker">{article.category} · {article.storyType||'News'}</div>
- <h1>{article.title}</h1>
- <p class="article-dek">{article.subheadline||article.summary}</p>
- <div class="article-meta-box"><span>By {article.author||'SATRN News'} · {article.date}</span>{article.verification && <span>Verification: {article.verification}</span>}</div>
- {article.image && <figure class="article-featured"><img src={article.image} alt={article.imageAlt||''}/>{article.imageCaption && <figcaption>{article.imageCaption}</figcaption>}</figure>}
- <div class="article-content">{(article.paragraphs||[]).map(p=><p>{p}</p>)}</div>
- {article.sources?.length>0 && <div class="sources"><strong>Sources and attribution</strong><ul>{article.sources.map(s=><li>{s.url?<a href={s.url} rel="noopener noreferrer" target="_blank">{s.title||s.url}</a>:s.title}</li>)}</ul></div>}
- {article.audioUrl && <div class="audio-player"><h3>Listen to this report</h3><audio controls preload="none" src={article.audioUrl}></audio></div>}
- </article><aside class="sidebar"><h3>More from SATRN News</h3><a href="/news/">Latest News →</a><a href="/newspapers/">Digital Newspaper →</a><a href="https://satrn.tv/" target="_blank" rel="noopener noreferrer">SATRN.TV ↗</a></aside></div>
+<Layout title={article.title} description={article.summary} heroImage={article.image}>
+ <div class="page-container article-breadcrumb"><a href="/">Home</a><span aria-hidden="true">/</span><a href="/news/">News</a><span aria-hidden="true">/</span><span>{article.category}</span></div>
+ <div class="page-container article-shell">
+ <article class="article" itemscope itemtype="https://schema.org/NewsArticle">
+  <div class="kicker">{article.category} {article.storyType&&' · '+article.storyType}</div>
+  <h1 itemprop="headline">{article.title}</h1>
+  <p class="article-dek" itemprop="description">{article.subheadline||article.summary}</p>
+  <div class="article-meta-box"><div>By <strong itemprop="author">{article.author}</strong> · <time datetime={article.date} itemprop="datePublished">{publicationDate}</time></div>
+  <div class="article-review">Editorially approved by {article.review.approvedBy}{article.review.approvedAt&&<span> · {dateLabel(article.review.approvedAt)}</span>}</div></div>
+  {article.image&&<figure class="article-featured">
+   <img src={article.image} alt={article.imageAlt||''} loading="eager" fetchpriority="high"/>
+   <figcaption>{article.imageCaption&&<span>{article.imageCaption} </span>}<span class="article-image-credit">{article.imageCredit}</span></figcaption>
+  </figure>}
+  <div class="article-content" itemprop="articleBody">{article.paragraphs.map(paragraph=><p>{paragraph}</p>)}</div>
+  {article.correction&&<section class="article-correction" aria-label="Correction notice"><strong>Correction / update</strong><p>{article.correction}</p></section>}
+  {article.sources?.length>0&&<section class="sources"><h2>Sources and documentation</h2><p>The sources below are provided for verification and context.</p>
+   <ol>{article.sources.map(source=><li><a href={source.url} rel="noopener noreferrer" target="_blank">{source.title}</a></li>)}</ol>
+  </section>}
+  {article.audioUrl&&<section class="article-audio"><h2>Listen to this report</h2><audio controls preload="none" src={article.audioUrl}>Your browser cannot play this audio.</audio></section>}
+  <div class="article-sharing"><a href="/news/">← Back to the newsroom</a><a href="/newspapers/">Read the digital newspaper →</a></div>
+  {related.length>0&&<section class="article-related"><div class="section-title"><h2>Related reporting</h2><a href="/news/">More reporting →</a></div>
+    <div class="article-related-grid">{related.map(a=><StoryCard article={a}/>)}</div></section>}
+ </article>
+ <aside class="sidebar"><h3>SATRN News</h3><p>Independent reporting. Global perspective.</p><a href="/news/">Latest News →</a><a href="/newspapers/">Digital Newspaper →</a><a href="/janus-intelligence/">JANUS Intelligence →</a><a href="https://satrn.tv/" rel="noopener noreferrer" target="_blank">SATRN.TV ↗</a></aside>
+ </div>
 </Layout>
