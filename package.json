@@ -1,13 +1,21 @@
 {
   "name": "satrn-news-web",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "deploy": "wrangler deploy"
   },
-  "dependencies": {"astro": "^7.4.2"},
-  "engines": {"node": ">=24.0.0"}
+  "dependencies": {
+    "astro": "^7.4.2"
+  },
+  "devDependencies": {
+    "wrangler": "^4.68.0"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
 }
