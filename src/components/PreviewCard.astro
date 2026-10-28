@@ -1,9 +1,10 @@
 ---
 const { story, variant='standard', showDate=true, showSummary=false }=Astro.props;
-const href=story.slug?'/news/'+story.slug+'/':'/'+(story.section||'news')+'/';
+const isNetworkPreview=variant==='video' && story.preview;
+const href=isNetworkPreview?'https://satrn.tv/':story.slug?'/news/'+story.slug+'/':'/'+(story.section||'news')+'/';
 ---
 <article class={'pv-card pv-'+variant}>
- <a class="pv-media" href={href} aria-label={story.preview?'Explore '+story.category+' desk':story.title}>
+ <a class="pv-media" href={href} target={isNetworkPreview?'_blank':undefined} rel={isNetworkPreview?'noopener noreferrer':undefined} aria-label={isNetworkPreview?'Visit SATRN.TV network':story.preview?'Explore '+story.category+' desk':story.title}>
   {story.image && <img src={story.image} loading={story.preview ? "eager" : "lazy"} decoding="async" alt="" referrerpolicy="no-referrer"/>}
   {variant==='video' && <span class="video-play" aria-hidden="true">▶</span>}
  </a>

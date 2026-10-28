@@ -29,3 +29,15 @@
   img{print-color-adjust:exact;-webkit-print-color-adjust:exact}
   .pv-card,.janus-story,.lead-small{break-inside:avoid}
 }
+
+/* SATRN v2 mobile usability and graceful external-image failure handling. */
+.mobile-nav summary{list-style:none;display:flex;align-items:center;gap:6px}
+.mobile-nav summary::-webkit-details-marker{display:none}
+.mobile-nav summary::marker{content:""}
+.mobile-nav summary:focus-visible,.primary-nav a:focus-visible{outline:2px solid var(--aqua);outline-offset:3px}
+.satrn-image-fallback{position:relative;overflow:hidden;background:linear-gradient(140deg,#123544 0%,#226a76 55%,#0c1a24 100%)}
+.satrn-image-fallback::before{content:"SATRN NEWS";font-weight:900;font-style:italic;letter-spacing:-.04em;color:rgba(255,255,255,.68);position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(12px,2vw,24px);z-index:0}
+.lead-large.satrn-image-fallback::before,.lead-small.satrn-image-fallback::before{color:rgba(255,255,255,.32)}
+.lead-large.satrn-image-fallback .lead-overlay,.lead-small.satrn-image-fallback .lead-overlay{z-index:2}
+@media(max-width:900px){.footer-columns>div:nth-child(4),.footer-columns>div:nth-child(5){display:block}}
+@media(max-width:680px){.footer-columns>div:nth-child(5){grid-column:1 / -1}.footer-columns>div:nth-child(4){grid-column:1 / -1}.footer-columns>div:nth-child(4) a{display:inline-block;margin-right:16px}.breaking-placeholder{max-width:38vw}}

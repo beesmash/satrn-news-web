@@ -51,6 +51,16 @@ const menus=[
   <div><h3>NEWSLETTER</h3><p>Get informed. Get ahead. Join the conversation.</p><span class="footer-subscribe">Subscription system coming soon.</span></div>
  </div><div class="page-container footer-bottom"><span>© {new Date().getFullYear()} SATRN News. All rights reserved.</span><span><a href="/privacy-policy/">Privacy</a> · <a href="/editorial-standards/">Editorial Standards</a> · <a href="/contact/">Contact</a></span></div></footer>
  <script>
+ // The design preview uses external images; if a remote asset fails, show a branded fallback
+ // instead of Safari's broken-image glyph. Preserve all working images unchanged.
+ document.addEventListener('error',(event)=>{
+  const img=event.target;
+  if(!(img instanceof HTMLImageElement)||!img.currentSrc.includes('images.unsplash.com'))return;
+  const host=img.parentElement;
+  if(!host)return;
+  host.classList.add('satrn-image-fallback');
+  img.remove();
+ },true);
  const today=document.getElementById('today-dc');
  const time=document.getElementById('today-time');
  const now=new Date();

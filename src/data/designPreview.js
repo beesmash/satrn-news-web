@@ -15,7 +15,7 @@ export const preview = {
  headlines: ['Ceasefire Talks Resume in Middle East','WHO Warns of New Global Health Threat','Japan Unveils Plan for Lunar Base by 2035','Oil Prices Dip as OPEC+ Boosts Output','EU Approves Landmark AI Regulation'],
  latest: [
   item('Ukraine Launches New Drone Offensive in Black Sea','WORLD','photo-1473968512647-3e447244af8f','world-news'),
-  item('Universities Face Funding Crisis Across the Globe','EDUCATION','photo-1523050854058-8df90110c9f1','education'),
+  item('Universities Face Funding Crisis Across the Globe','EDUCATION','photo-1531058020387-3be344556be6','education'),
   item('Venice Biennale Opens With Bold New Visions','CULTURE','photo-1531058020387-3be344556be6','culture'),
   item('Record Heatwaves Hit South Asia Early This Year','ENVIRONMENT','photo-1500534623283-312aade485b7','environment'),
   item('Tech Giants Announce $200B Investment in AI','TECHNOLOGY','photo-1518770660439-4636190af475','technology')
@@ -70,7 +70,7 @@ export const preview = {
  ],
  society: [
   item('Youth Mental Health Crisis Alarms Experts','SOCIETY','photo-1529156069898-49953e39b3ac','society'),
-  item('Global Literacy Rate Continues to Improve','SOCIETY','photo-1523050854058-8df90110c9f1','society'),
+  item('Global Literacy Rate Continues to Improve','SOCIETY','photo-1524578271613-d550eacf6090','society'),
   item('Urbanization Trends Reshape Megacities','SOCIETY','photo-1519501025264-65ba15a82390','society')
  ],
  progress: [
