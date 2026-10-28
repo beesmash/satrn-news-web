@@ -1,7 +1,7 @@
 // VISUAL DESIGN FIXTURE — these illustrative headlines and stock-photo URLs are
 // intentionally NOT published articles, current news, independently verified
 // reporting, or SATRN editorial output. Never put them into articles.json.
-const photo = id => 'https://images.unsplash.com/' + id + '?auto=format&fit=crop&w=1100&q=80';
+const photo = id => 'https://images.unsplash.com/' + id + '?auto=format&fit=crop&w=760&q=68';
 const item = (title, category, image, section='news', date='May 24, 2025') =>
   ({title,category,image:photo(image),section,date,preview:true});
 export const preview = {

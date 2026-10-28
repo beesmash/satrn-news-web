@@ -14,18 +14,18 @@ const hero=designMode?preview.hero:live.slice(1,5);
 const latest=designMode?preview.latest:live.slice(0,5);
 const topHeadlines=designMode?preview.headlines:live.slice(0,5).map(a=>a.title);
 ---
-<Layout active="/">
+<Layout active="/" heroImage={lead.image}>
  {designMode && <div class="preview-disclaimer"><div class="page-container"><strong>DESIGN PREVIEW</strong> · Illustrative May 2025 headlines and stock imagery. This is a visual layout test, not current news or published SATRN reporting.</div></div>}
  <div class="page-container home">
   <section class="lead-grid" aria-label="Featured news">
    <article class="lead-large" style={'--img:url("'+lead.image+'")'}>
-    <img class="lead-photo" src={lead.image} alt="" fetchpriority="high"/>
+    <img class="lead-photo" src={lead.image} alt="" loading="eager" decoding="sync" fetchpriority="high"/>
     <div class="lead-overlay"><span class="tag">{lead.category}</span><h1><a href={link(lead)}>{lead.title}</a></h1>
     <p>{lead.summary||'Nations explore new approaches to the world’s most consequential challenges.'}</p>
     <div class="lead-byline">{designMode?'ILLUSTRATIVE · ':''}{lead.date}</div></div>
    </article>
    <div class="lead-side">{hero.map((s,i)=><article class="lead-small">
-    <img src={s.image} alt="" loading={i===0?'eager':'lazy'}/>
+    <img src={s.image} alt="" loading={designMode ? "eager" : i===0 ? "eager" : "lazy"} decoding="async"/>
     <div class="lead-overlay"><span class="tag">{s.category}</span><h2><a href={link(s)}>{s.title}</a></h2></div>
    </article>)}</div>
   </section>
@@ -42,7 +42,7 @@ const topHeadlines=designMode?preview.headlines:live.slice(0,5).map(a=>a.title);
  <section class="janus-area"><div class="page-container">
   <div class="section-title section-title-dark"><h2><span class="janus-bullet">✦</span> JANUS INTELLIGENCE</h2><p>Exclusive analysis and forward-looking insights.</p><a href="/janus-intelligence/">View All Intelligence →</a></div>
   <div class="janus-grid">{pick('janus','janus-intelligence',4).map(s=><article class="janus-story">
-   <a href={link(s)}><img src={s.image} alt="" loading="lazy"/><span class="janus-label">{s.category}</span></a>
+   <a href={link(s)}><img src={s.image} alt="" loading={designMode ? "eager" : "lazy"} decoding="async"/><span class="janus-label">{s.category}</span></a>
    <h3><a href={link(s)}>{s.title}</a></h3><div class="pv-meta">{designMode?'ILLUSTRATIVE · ':''}{s.date}</div>
   </article>)}</div>
  </div></section>

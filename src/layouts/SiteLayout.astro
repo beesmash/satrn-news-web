@@ -1,7 +1,7 @@
 ---
 import '../styles/site.css';
 import articles from '../data/articles.json';
-const {title='SATRN News',description='Independent news, analysis, global reporting and investigations.',active=''}=Astro.props;
+const {title='SATRN News',description='Independent news, analysis, global reporting and investigations.',active='',heroImage}=Astro.props;
 const published=articles.filter(a=>a.status==='published');
 const breaking=published.filter(a=>a.breaking).slice(0,3);
 const menus=[
@@ -13,6 +13,7 @@ const menus=[
 <!doctype html><html lang="en"><head>
  <meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
  <meta name="description" content={description}/><meta name="theme-color" content="#ffffff"/>
+ {heroImage && <link rel="preload" as="image" href={heroImage} fetchpriority="high"/>}
  <link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
  <title>{title==='SATRN News'?title:title+' | SATRN News'}</title>
 </head><body>

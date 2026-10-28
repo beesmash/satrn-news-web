@@ -17,3 +17,15 @@
 @media(max-width:680px){.page-container{width:calc(100% - 22px)}.header-main{min-height:70px}.masthead-logo,.masthead-logo img{width:155px}.utility-bar{height:24px}.breaking-all{display:none}.lead-grid{height:auto;display:flex;flex-direction:column}.lead-large{min-height:370px}.lead-side{grid-template-columns:1fr 1fr}.lead-small{min-height:170px}.lead-overlay h1{font-size:25px}.lead-small h2{font-size:14px}.headline-strip{gap:10px}.headline-strip>strong{font-size:11px}.headline-items{gap:4px}.headline-items span{font-size:10px;padding-left:7px}.latest-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.latest-grid .pv-card:last-child{display:none}.janus-grid{grid-template-columns:1fr 1fr}.janus-story>a{height:125px}.janus-area{padding:22px 0}.section-title-dark p{display:none}.business-market-row,.science-tech-row{grid-template-columns:1fr}.three-news-columns{grid-template-columns:1fr}.three-news-columns .news-group:last-child{grid-column:auto}.three-news-columns .news-group:last-child .group-content{grid-template-columns:1fr}.three-news-columns .news-group:last-child .pv-card{display:grid}.three-news-columns .news-group:last-child .pv-media{aspect-ratio:auto;height:74px}.market-layout{grid-template-columns:1fr 1fr}.newsletter-layout{grid-template-columns:1fr}.newsletter-layout h2{font-size:46px}.tv-grid{grid-template-columns:repeat(3,1fr)}.tv-grid .pv-card:nth-child(n+4){display:none}.footer-columns{grid-template-columns:1fr 1fr}.footer-columns .footer-about{grid-column:1/-1}.footer-bottom{flex-direction:column;align-items:start;gap:9px}.archive-content .cards-5{grid-template-columns:1fr 1fr}.article-shell{grid-template-columns:1fr}.article-shell .sidebar{display:none}}
 @media(max-width:420px){.lead-large{min-height:330px}.lead-small{min-height:145px}.lead-small .lead-overlay{padding:10px}.lead-small h2{font-size:12px}.lead-overlay p{font-size:10px}.headline-items span:nth-child(n+3){display:none}.headline-items{grid-template-columns:repeat(2,1fr)}.janus-grid{gap:8px}.janus-story h3{font-size:11px}.market-layout{grid-template-columns:1fr}.more-grid{grid-template-columns:repeat(2,1fr)}.archive-content .cards-5{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.pv-media img{transition:none}}
+
+/* Improve staging photography for mobile Safari full-page captures. */
+.lead-large{background:radial-gradient(circle at 70% 18%,#2b7489 0%,#17333f 45%,#0b151e 90%);background-image:var(--img)}
+.lead-photo{background:transparent}
+.lead-side .lead-small{background-color:#19333d}
+.pv-media{background-color:#1d3c4b;background-image:linear-gradient(135deg,#183440,#537686)}
+@media print{
+  html,body{background:#fff!important}
+  .lead-large,.lead-small,.janus-area,.janus-story,.audio-panel,.newsletter-banner{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  img{print-color-adjust:exact;-webkit-print-color-adjust:exact}
+  .pv-card,.janus-story,.lead-small{break-inside:avoid}
+}
