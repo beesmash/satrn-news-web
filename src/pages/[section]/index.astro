@@ -3,15 +3,24 @@ import Layout from '../../layouts/SiteLayout.astro';
 import StoryCard from '../../components/StoryCard.astro';
 import articles from '../../data/articles.json';
 import { sections, storyBelongsTo } from '../../data/sections.js';
+const policies=[
+ ['contact','Contact','Editorial contact information will be published after the newsroom contact channel is verified.'],
+ ['editorial-standards','Editorial Standards','SATRN News requires attribution, independent verification and editorial approval before publication. A full editorial policy is being prepared.'],
+ ['corrections-policy','Corrections Policy','A formal corrections process and contact channel will be published before public launch.'],
+ ['ai-automation-disclosure','AI & Automation Disclosure','AI systems may assist with research, writing, editing and production. All publishable reports require accountable human review, source verification and approval.'],
+ ['privacy-policy','Privacy Policy','The full privacy policy will be published before launch. This staging website does not collect newsletter subscriptions.'],
+ ['government-resources','Government Resources','A curated index of official United States government resources is planned.']
+];
 export function getStaticPaths() {
- return [...sections,['investigations','Investigations'],['world','World News'],['politics','U.S. Politics']]
-  .map(([slug,name])=>({ params:{section:slug}, props:{name,filterSlug: slug === 'world'?'world-news':slug === 'politics'?'us-politics':slug}}));
+ return [...sections,['investigations','Investigations'],['world','World News'],['politics','U.S. Politics'],...policies.map(([slug,name])=>[slug,name])]
+  .map(([slug,name])=>({params:{section:slug},props:{name,filterSlug: slug==='world'?'world-news':slug==='politics'?'us-politics':slug,policyDescription:policies.find(p=>p[0]===slug)?.[2]}}));
 }
-const {name,filterSlug} = Astro.props;
-const items = articles.filter(a=>a.status === 'published' && storyBelongsTo(a,filterSlug)).sort((a,b)=>b.date.localeCompare(a.date));
+const {name,filterSlug,policyDescription}=Astro.props;
+const items = articles.filter(a=>a.status==='published' && storyBelongsTo(a,filterSlug)).sort((a,b)=>b.date.localeCompare(a.date));
 ---
 <Layout title={name} active={'/'+Astro.params.section+'/'}><div class="container archive-header">
- <div class="kicker">SATRN NEWS · REPORTING DESK</div><h1>{name}</h1>
- <p>Independent reporting, original analysis and context from SATRN News.</p>
- </div><div class="container section archive-content">{items.length>0?<div class="cards-5">{items.map(a=><StoryCard article={a}/>)}</div>:<div class="launch-note"><strong>{name} coverage in preparation.</strong><p>No reporting has been approved for publication in this section yet.</p><a href="/news/">Browse all news →</a></div>}</div>
+ <div class="kicker">SATRN NEWS · {policyDescription?'INFORMATION':'REPORTING DESK'}</div>
+ <h1>{name}</h1><p>{policyDescription || 'Independent reporting, original analysis and context from SATRN News.'}</p>
+ </div>
+ {!policyDescription && <div class="container section archive-content">{items.length>0?<div class="cards-5">{items.map(a=><StoryCard article={a}/>)}</div>:<div class="launch-note"><strong>{name} coverage in preparation.</strong><p>No reporting has been approved for publication in this section yet.</p><a href="/news/">Browse all news →</a></div>}</div>}
 </Layout>

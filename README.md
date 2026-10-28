@@ -1,52 +1,74 @@
-# SATRN News Web — v0.1 Starter
+# SATRN News v2 — GitHub/Cloudflare Astro Edition
 
-Official SATRN News publishing platform. Independent reporting, investigations, daily digital newspapers, SATRN.TV integration and human-reviewed AI-assisted newsroom operations.
+This is the **Astro adaptation** of the user-supplied **SATRN News v2 WordPress Theme 1.0.0** (archive uploaded October 28, 2026). The original archive remains a separate WordPress/PHP theme; it **cannot** be installed directly in Cloudflare Pages or GitHub Pages.
 
-## Current implementation
+## Visual and editorial modules retained
 
-- Responsive Astro static news website and navigation.
-- Build-time publication of **approved** articles from src/data/articles.json.
-- Digital newspaper archive index from src/data/editions.json.
-- Explicit SATRN LIVE placeholder (no functioning live player yet).
-- No article migration, full newspaper images, CMS, video streaming backend, or automated editorial publishing yet.
-- Staging is intentionally blocked from search-engine indexing until verified production launch.
+- SATRN aqua (`#13aeb9`), orange (`#f28c28`), ink/black colors, masthead, and QUESTION EVERYTHING tagline.
+- Breaking ticker, 1+4 feature-story grid, Top Headlines, Latest / Trending.
+- WordPress-inspired taxonomy of World News, World Videos, Culture, Business, Blockchain, Crypto Videos, Videos, Science, Technology, Sport, Soccer Videos, Racing Videos, plus extended news/opinion/markets categories.
+- JANUS Intelligence dark module, SATRN Audio, Daily Brief newsletter presentation and a separate SATRN.TV network bridge.
+- Static article templates, editorial metadata, mobile navigation, newsroom search and digital newspaper index.
 
-## Local development
+**Important visual note:** The original ZIP contains a WordPress theme screenshot (a brand graphic) but not a separate transparent logo asset. The Astro masthead currently uses a CSS-rendered approximation of the SATRN logo. Swap it for an approved original transparent SATRN News logo before final launch.
 
-Requires Node.js 22.12+.
+## Development
 
-1. Run npm install
-2. Run npm run dev
-3. Run npm run build to verify the production build
-4. Run npm run preview to inspect the built website
+Requires Node.js **24**.
 
-## Deploy on Cloudflare Pages
+```sh
+npm install
+npm run dev
+npm run build
+npm run preview
+```
 
-- Connect the GitHub repository beesmash/satrn-news-web through Cloudflare Workers & Pages.
-- Framework preset: Astro.
-- Production branch: main.
-- Build command: npm run build.
-- Output directory: dist.
-- Verify the *.pages.dev preview before changing DNS.
-- Before public launch: set the production site URL in astro.config.mjs; update robots.txt; remove the staging X-Robots-Tag: noindex, nofollow from public/_headers.
-- Do not move DNS or cancel Bluehost before backups, URL redirects, media and email-record verification.
+## Cloudflare Pages deployment
 
-## Publish approved reporting
+Connect GitHub repository `beesmash/satrn-news-web`, production branch `main`, framework `Astro`, build command `npm run build`, output directory `dist`, Node.js `24`.
 
-Add an object to src/data/articles.json with slug, title, summary, category, date, author, status: published, paragraphs, and optional owned/licensed image fields (image, imageAlt, imageCaption). The static build creates /news/SLUG/.
+**Staging only:** `public/robots.txt` and `public/_headers` block search indexing until production review.
 
-Never place unpublished confidential material or proprietary JANUS formulas in this public repository.
+## Editorial workflow
 
-## Digital newspaper issues
+The site only renders articles with `status: "published"` in `src/data/articles.json`; never commit confidential drafts or JANUS proprietary formulas in this public repository. Example article structure:
 
-Place a verified newspaper PDF in public/editions and add an object to src/data/editions.json containing title, summary, date, pages, status: published and url pointing to that PDF.
+```json
+{
+  "slug": "your-verified-headline",
+  "title": "Your Verified Headline",
+  "summary": "Accurate editorial summary.",
+  "subheadline": "Optional supporting deck.",
+  "date": "2026-10-28",
+  "author": "SATRN News",
+  "category": "World News",
+  "categories": ["world-news"],
+  "status": "published",
+  "verification": "Verified",
+  "storyType": "News",
+  "trendingScore": 0,
+  "breaking": false,
+  "image": "/media/approved-image.jpg",
+  "imageAlt": "Description",
+  "imageCaption": "Photo credit and caption",
+  "paragraphs": ["First paragraph.", "Second paragraph."],
+  "sources": [{"title":"Official source","url":"https://example.org/"}]
+}
+```
 
-Exact SATRN News newspaper page-image layouts will require the approved source ZIP files and a later archive/viewer implementation.
+The site currently has **zero imported articles and editions**. All editorial content requires review before publishing. Add a full newspaper PDF to `public/editions` and a matching `src/data/editions.json` entry to publish a paper.
 
-## Next milestones
+## Not yet implemented
 
-Audit Bluehost/WordPress content and backups; import approved articles and media; implement newspaper image viewer and archive; add private authenticated editorial CMS with audit trails and approvals; add RSS and SEO; connect approved SATRN.TV video; implement JANUS/MORGAN review workflow.
+- WordPress PHP theme runtime or WordPress REST endpoints (`/wp-json/satrn/v1/...`).
+- Staff login, secure editorial CMS, scheduled publication, subscriptions, advertising backend.
+- JANUS/MORGAN publishing automation and verification gate.
+- SATRN.TV live feed infrastructure.
+- Bluehost/WordPress content migration, historical URLs/redirects, domain cutover and email DNS migration.
+- Final official SVG/PNG logo and original newspaper page-image viewer.
 
-SATRN News content © 2026. All rights reserved. No open-source license selected. Do not commit any secrets or customer/subscriber records.
+## Safety
 
-Build status: not verified locally because the npm registry was unavailable in this environment; use GitHub Actions to confirm before deploying.
+Do not blindly import PHP, unknown plugins or cron entries from a compromised WordPress host. Use a reviewed backup and migrate data/articles/assets separately. Never expose API secrets in client code, GitHub commits or the public repository.
+
+SATRN News © 2026. All rights reserved; no open-source license granted.
