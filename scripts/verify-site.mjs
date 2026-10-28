@@ -6,6 +6,6 @@ const paths=["dist/index.html","dist/news/index.html","dist/newspapers/index.htm
 const errors=[];
 for(const path of paths)if(!existsSync(join(root,path)))errors.push("Missing: "+path);
 const home=existsSync(join(root,"dist/index.html"))?readFileSync(join(root,"dist/index.html"),"utf8"):"";
-for(const needle of ["JANUS INTELLIGENCE","DESIGN PREVIEW","SATRN"])if(!home.includes(needle))errors.push("Homepage missing: "+needle);
+for(const needle of ["JANUS INTELLIGENCE","SATRN"])if(!home.includes(needle))errors.push("Homepage missing: "+needle);
 if(errors.length){console.error(errors.join("\n"));process.exit(1);}
 console.log("SATRN static-site smoke test PASSED.");

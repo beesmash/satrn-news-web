@@ -72,3 +72,16 @@ The site currently has **zero imported articles and editions**. All editorial co
 Do not blindly import PHP, unknown plugins or cron entries from a compromised WordPress host. Use a reviewed backup and migrate data/articles/assets separately. Never expose API secrets in client code, GitHub commits or the public repository.
 
 SATRN News © 2026. All rights reserved; no open-source license granted.
+
+
+## v0.2 editorial publishing and Dropbox strategy (Oct 28, 2026)
+
+- Front-end now includes a full article reader, source attribution and credit display.
+- Each approved daily newspaper can have a detail page with every image page in order and/or a PDF.
+- Publication catalogs remain empty until actual SATRN editorial approval and import.
+- Public JSON catalog validation rejects drafts, missing review metadata, broken local asset paths, and Dropbox shared links used as public media.
+- Pipeline and automated tests: npm run check.
+- Storage: private Dropbox originals; approved derivatives on Cloudflare R2; public site on Cloudflare Workers.
+- Architecture and workflows: docs/STORAGE_ARCHITECTURE.md, docs/EDITORIAL_WORKFLOW.md, docs/CONTENT_SCHEMAS.md.
+
+This is a static approved-release workflow, NOT yet a multi-user authentication system or continuously scheduled publishing agent. The Dropbox folder tree and R2 storage bucket have not yet been created. Configure GitHub branch protection to enforce editorial review.

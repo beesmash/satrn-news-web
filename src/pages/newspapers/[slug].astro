@@ -16,7 +16,7 @@ const pages=issue.pageImages||[];
   <div class="edition-details"><span><strong>{issue.pages}</strong> total pages</span><span>{dateLabel(issue.date)}</span><span>Approved by {issue.review.approvedBy}</span></div>
   <div class="edition-actions">{issue.pdfUrl&&<a class="edition-button" href={issue.pdfUrl} target="_blank" rel="noopener noreferrer">Read complete PDF ↗</a>}<a class="edition-link" href="/newspapers/">← All editions</a></div>
  </header>
- <main class="page-container newspaper-reader">
+ <section class="page-container newspaper-reader">
  {pages.length>0?
  <><div class="newspaper-reader-heading"><h2>Read the complete issue</h2><p>Each newspaper page is presented separately, in the original reading order.</p></div>
  <nav class="page-jumps" aria-label="Jump to newspaper page">{pages.map((p,i)=><a href={'#paper-page-'+(i+1)}>{String(i+1).padStart(2,"0")}</a>)}</nav>
@@ -27,5 +27,5 @@ const pages=issue.pageImages||[];
   </a><figcaption>Page {i+1} · Select image to view the original size.</figcaption>
  </figure>)}</div></>:
  <div class="newspaper-pdf-only"><h2>Complete PDF edition</h2><p>This issue is available as a complete PDF. Individual page images are not yet supplied.</p>{issue.pdfUrl&&<a class="edition-button" href={issue.pdfUrl} target="_blank" rel="noopener noreferrer">Open newspaper PDF ↗</a>}</div>}
- </main>
+ </section>
 </Layout>

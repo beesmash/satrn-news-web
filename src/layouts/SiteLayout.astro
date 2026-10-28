@@ -1,8 +1,9 @@
 ---
 import '../styles/site.css';
 import articles from '../data/articles.json';
+import {publishedArticles} from '../lib/publication.mjs';
 const {title='SATRN News',description='Independent news, analysis, global reporting and investigations.',active='',heroImage}=Astro.props;
-const published=articles.filter(a=>a.status==='published');
+const published=publishedArticles(articles);
 const breaking=published.filter(a=>a.breaking).slice(0,3);
 const menus=[
  ['/', 'Home'],['/news/','News'],['/janus-intelligence/','Intelligence'],
