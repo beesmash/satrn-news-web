@@ -1,19 +1,25 @@
 {
-  "name":"satrn-news-web",
-  "version":"0.2.0",
-  "private":true,
-  "type":"module",
-  "scripts":{
-    "dev":"astro dev",
-    "build":"astro build",
-    "preview":"astro preview",
-    "validate":"node scripts/validate-content.mjs",
-    "test":"node --test scripts/test-publishing.mjs",
-    "verify":"node scripts/verify-site.mjs",
-    "check":"npm run validate && npm test && npm run build && npm run verify",
-    "deploy":"wrangler deploy"
+  "name": "satrn-news-web",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "validate": "node scripts/validate-content.mjs",
+    "test": "node --test scripts/test-*.mjs",
+    "verify": "node scripts/verify-site.mjs",
+    "check": "npm run validate && npm test && npm run build && npm run verify",
+    "deploy": "wrangler deploy"
   },
-  "dependencies":{"astro":"^7.4.2"},
-  "devDependencies":{"wrangler":"^4.68.0"},
-  "engines":{"node":">=24.0.0"}
+  "dependencies": {
+    "astro": "^7.4.2"
+  },
+  "devDependencies": {
+    "wrangler": "^4.68.0"
+  },
+  "engines": {
+    "node": ">=24.0.0"
+  }
 }
