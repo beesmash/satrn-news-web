@@ -2,11 +2,16 @@
 import Layout from '../../layouts/SiteLayout.astro';
 import StoryCard from '../../components/StoryCard.astro';
 import articles from '../../data/articles.json';
+import { sections, storyBelongsTo } from '../../data/sections.js';
 export function getStaticPaths() {
-  const sections = { world:'World', politics:'Politics', business:'Business', technology:'Technology', investigations:'Investigations' };
-  return Object.entries(sections).map(([section,name]) => ({ params:{section}, props:{name} }));
+ return [...sections,['investigations','Investigations'],['world','World News'],['politics','U.S. Politics']]
+  .map(([slug,name])=>({ params:{section:slug}, props:{name,filterSlug: slug === 'world'?'world-news':slug === 'politics'?'us-politics':slug}}));
 }
-const { name } = Astro.props;
-const published = articles.filter(a => a.status === 'published' && a.category.toLowerCase() === name.toLowerCase()).sort((a,b) => b.date.localeCompare(a.date));
+const {name,filterSlug} = Astro.props;
+const items = articles.filter(a=>a.status === 'published' && storyBelongsTo(a,filterSlug)).sort((a,b)=>b.date.localeCompare(a.date));
 ---
-<Layout title={name} active={'/' + Astro.params.section + '/'}><div class="wrap inner-page"><div class="eyebrow">SATRN NEWS · REPORTING DESK</div><h1>{name}</h1><p>The latest SATRN News coverage and investigations.</p><div class="stories-grid">{published.map(article => <StoryCard article={article} />)}</div>{published.length === 0 && <div class="empty-state">There are no published stories in this section yet.</div>}</div></Layout>
+<Layout title={name} active={'/'+Astro.params.section+'/'}><div class="container archive-header">
+ <div class="kicker">SATRN NEWS · REPORTING DESK</div><h1>{name}</h1>
+ <p>Independent reporting, original analysis and context from SATRN News.</p>
+ </div><div class="container section archive-content">{items.length>0?<div class="cards-5">{items.map(a=><StoryCard article={a}/>)}</div>:<div class="launch-note"><strong>{name} coverage in preparation.</strong><p>No reporting has been approved for publication in this section yet.</p><a href="/news/">Browse all news →</a></div>}</div>
+</Layout>

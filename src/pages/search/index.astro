@@ -1,0 +1,35 @@
+---
+import Layout from '../../layouts/SiteLayout.astro';
+import articles from '../../data/articles.json';
+const published = articles.filter(a=>a.status==='published').map(({slug,title,summary,category,date})=>({slug,title,summary,category,date}));
+---
+<Layout title="Search SATRN News">
+ <div class="container archive-header"><div class="kicker">SATRN NEWS · ARCHIVE</div><h1>Search</h1><p>Search published SATRN News articles.</p></div>
+ <div class="container section search-area">
+  <label for="search-query">Search the newsroom</label>
+  <input type="search" id="search-query" placeholder="Enter a topic, headline or category" autocomplete="off"/>
+  <p id="search-count" role="status" aria-live="polite"></p>
+  <div id="search-results"></div>
+ </div>
+ <script type="application/json" id="satrn-search-data" set:html={JSON.stringify(published).replace(/</g,'\\u003c')}></script>
+ <script>
+  const input=document.getElementById('search-query');
+  const target=document.getElementById('search-results');
+  const counter=document.getElementById('search-count');
+  const data=JSON.parse(document.getElementById('satrn-search-data')?.textContent||'[]');
+  const render=()=>{
+    if(!input||!target||!counter)return;
+    const query=input.value.trim().toLowerCase();
+    target.replaceChildren();
+    const matches = query ? data.filter(a=>[a.title,a.summary,a.category].join(' ').toLowerCase().includes(query)).slice(0,50):[];
+    counter.textContent=query ? matches.length+' matching published articles' : 'Enter a search term to begin.';
+    matches.forEach(a=>{
+     const item=document.createElement('article');item.className='search-result';
+     const link=document.createElement('a');link.href='/news/'+encodeURIComponent(a.slug)+'/';link.textContent=a.title;
+     const desc=document.createElement('p');desc.textContent=(a.category||'News')+' · '+(a.date||'')+' — '+(a.summary||'');
+     item.append(link,desc);target.appendChild(item);
+    });
+  };
+  input?.addEventListener('input',render);render();
+ </script>
+</Layout>

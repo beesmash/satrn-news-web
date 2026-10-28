@@ -1,32 +1,53 @@
 ---
 import '../styles/site.css';
-const { title = 'SATRN News', description = 'Independent journalism, global reporting, and special investigations.', active = '' } = Astro.props;
-const links = [
-  ['/', 'Home'], ['/news/', 'News'], ['/world/', 'World'], ['/politics/', 'Politics'],
-  ['/business/', 'Business'], ['/technology/', 'Technology'], ['/investigations/', 'Investigations'],
-  ['/newspapers/', 'Digital Newspaper'], ['/live/', 'SATRN LIVE']
-];
+import articles from '../data/articles.json';
+import { navLinks, storyBelongsTo } from '../data/sections.js';
+const { title = 'SATRN News', description = 'Independent news, analysis and global perspective. Question everything.', active = '' } = Astro.props;
+const published = articles.filter(a => a.status === 'published');
+const breaking = published.filter(a => a.breaking === true || storyBelongsTo(a, 'breaking-news')).slice(0, 5);
+const isCurrent = (href) => href === active;
 ---
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
-    <meta name="theme-color" content="#101010" />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <title>{title === 'SATRN News' ? title : title + ' | SATRN News'}</title>
-  </head>
-  <body>
-    <a class="skip-link" href="#main">Skip to content</a>
-    <div class="topbar"><div class="wrap topbar-inner"><span>INDEPENDENT REPORTING · GLOBAL PERSPECTIVE</span><span>WASHINGTON, D.C.</span></div></div>
-    <header class="site-header">
-      <div class="wrap brand-row"><a class="brand" href="/" aria-label="SATRN News home"><span class="brand-satrn">SATRN</span><span class="brand-news">NEWS</span></a><div class="brand-tagline">The Global Newsroom</div></div>
-      <nav class="nav" aria-label="Primary navigation"><div class="wrap nav-inner">
-        {links.map(([url,label]) => <a href={url} aria-current={active === url ? 'page' : undefined}>{label}</a>)}
-      </div></nav>
-    </header>
-    <main id="main"><slot /></main>
-    <footer class="footer"><div class="wrap footer-grid"><div><strong>SATRN NEWS</strong><p>Independent reporting, analysis and global perspective.</p></div><div><span class="footer-label">NEWSROOM</span><a href="/about/">About</a><a href="/newspapers/">Digital Editions</a><a href="/live/">SATRN LIVE</a></div><div><span class="footer-label">EDITORIAL</span><p>Articles and newspaper editions require verification and editorial approval before publication.</p></div></div><div class="wrap footer-bottom">© {new Date().getFullYear()} SATRN News. All rights reserved. · Staging edition</div></footer>
-  </body>
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1" />
+ <meta name="description" content={description} />
+ <meta name="theme-color" content="#0c1116" />
+ <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+ <title>{title === 'SATRN News' ? title : title + ' | SATRN News'}</title>
+</head>
+<body>
+ <a class="skip-link" href="#content">Skip to content</a>
+ <header>
+  <div class="site-topbar"><div class="container">
+   <span><span id="satrn-local-date">Washington, D.C.</span> · Washington, D.C.</span>
+   <span class="utility-links"><a href="/about/">About</a><a href="/contact/">Contact</a><a href="https://satrn.tv/" target="_blank" rel="noopener noreferrer">SATRN.TV ↗</a></span>
+  </div></div>
+  {breaking.length > 0 && <div class="breaking"><div class="container"><span class="breaking-label">BREAKING NEWS</span><div class="breaking-items">{breaking.map(a=><a href={'/news/'+a.slug+'/'}>{a.title}</a>)}</div></div></div>}
+  <div class="masthead"><div class="container masthead-main">
+   <div class="brand"><a class="brand-logo" href="/" aria-label="SATRN News homepage"><strong class="brand-main">SATRN<span class="brand-orbit" aria-hidden="true"></span></strong><span class="brand-sub">NEWS</span></a><div class="tagline">QUESTION EVERYTHING</div></div>
+   <div class="masthead-right"><span class="eyebrow">THE GLOBAL NEWSROOM</span><span>INDEPENDENT REPORTING · INVESTIGATIONS · ANALYSIS</span></div>
+  </div></div>
+  <nav class="site-nav" aria-label="Primary navigation"><div class="container nav-wrap">
+    <div class="desktop-menu">{navLinks.map(([href,label])=><a href={href} aria-current={isCurrent(href)?'page':undefined}>{label}</a>)}</div>
+    <details class="mobile-menu"><summary>☰ <span>Menu</span></summary><div class="mobile-menu-panel">{navLinks.map(([href,label])=><a href={href} aria-current={isCurrent(href)?'page':undefined}>{label}</a>)}</div></details>
+    <a class="nav-search" href="/search/" aria-label="Search SATRN News">⌕</a>
+  </div></nav>
+ </header>
+ <main id="content"><slot /></main>
+ <footer class="site-footer"><div class="container">
+  <div class="footer-grid">
+    <div><h2>SATRN NEWS</h2><p>Independent news, analysis and intelligence for a changing world.</p><strong>QUESTION EVERYTHING.</strong></div>
+    <div><h3>Explore</h3><ul><li><a href="/news/">News</a></li><li><a href="/world-news/">World News</a></li><li><a href="/newspapers/">Digital Newspapers</a></li><li><a href="/investigations/">Investigations</a></li></ul></div>
+    <div><h3>Network</h3><ul><li><a href="https://satrn.tv/" target="_blank" rel="noopener noreferrer">SATRN.TV ↗</a></li><li><a href="/satrn-audio/">SATRN Audio</a></li><li><a href="/janus-intelligence/">JANUS Intelligence</a></li><li><a href="/government-resources/">Government Resources</a></li></ul></div>
+    <div><h3>Information</h3><ul><li><a href="/editorial-standards/">Editorial Standards</a></li><li><a href="/corrections-policy/">Corrections</a></li><li><a href="/ai-automation-disclosure/">AI & Automation</a></li><li><a href="/privacy-policy/">Privacy</a></li><li><a href="/contact/">Contact</a></li></ul></div>
+  </div>
+  <div class="footer-bottom">© {new Date().getFullYear()} SATRN News. All rights reserved. · Staging build</div>
+ </div></footer>
+ <script>
+  const el = document.getElementById('satrn-local-date');
+  if (el) el.textContent = new Intl.DateTimeFormat('en-US', { timeZone:'America/New_York',weekday:'long',year:'numeric',month:'long',day:'numeric'}).format(new Date());
+ </script>
+</body>
 </html>

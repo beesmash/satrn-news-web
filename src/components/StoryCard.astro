@@ -2,10 +2,12 @@
 const { article } = Astro.props;
 const href = '/news/' + article.slug + '/';
 ---
-<article class="story-card">
-  {article.image && <a href={href}><img src={article.image} alt={article.imageAlt || ''} loading="lazy" /></a>}
-  <div class="eyebrow">{article.category} · {article.date}</div>
-  <h3><a href={href}>{article.title}</a></h3>
-  <p>{article.summary}</p>
-  <a class="text-link" href={href}>Read report <span aria-hidden="true">↗</span></a>
+<article class="news-card">
+ <a class="thumb" href={href} aria-label={'Read '+article.title}>
+  {article.image ? <img src={article.image} alt={article.imageAlt || ''} loading="lazy" /> : <span class="thumb-fallback" aria-hidden="true">SATRN NEWS</span>}
+ </a>
+ <div class="kicker">{article.category}</div>
+ <h3><a href={href}>{article.title}</a></h3>
+ <div class="meta">{article.date} · {article.storyType || 'News'}</div>
+ {article.summary && <p>{article.summary}</p>}
 </article>

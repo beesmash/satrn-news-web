@@ -1,0 +1,14 @@
+---
+import Layout from '../../layouts/SiteLayout.astro';
+const pages = [
+ ['contact','Contact','Editorial contact information will be published after the newsroom contact channel is verified.'],
+ ['editorial-standards','Editorial Standards','SATRN News requires attribution, independent verification and editorial approval before publication. A full editorial policy is being prepared.'],
+ ['corrections-policy','Corrections Policy','A formal corrections process and contact channel will be published before public launch.'],
+ ['ai-automation-disclosure','AI & Automation Disclosure','AI systems may assist with research, writing, editing and production. All publishable reports require accountable human review, source verification and approval.'],
+ ['privacy-policy','Privacy Policy','The full privacy policy will be published before launch. This staging website does not collect newsletter subscriptions.'],
+ ['government-resources','Government Resources','A curated index of official United States government resources is planned.'],
+];
+export function getStaticPaths(){return pages.map(([policy,name,description])=>({params:{policy},props:{name,description}}));}
+const {name,description}=Astro.props;
+---
+<Layout title={name}><div class="container archive-header"><div class="kicker">SATRN NEWS · INFORMATION</div><h1>{name}</h1><p>{description}</p></div></Layout>

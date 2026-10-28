@@ -2,6 +2,6 @@
 import Layout from '../../layouts/SiteLayout.astro';
 import StoryCard from '../../components/StoryCard.astro';
 import articles from '../../data/articles.json';
-const published = articles.filter(a=>a.status==='published').sort((a,b)=>b.date.localeCompare(a.date));
+const published = articles.filter(a=>a.status === 'published').sort((a,b)=>b.date.localeCompare(a.date));
 ---
-<Layout title="News" active="/news/"><div class="wrap inner-page"><div class="eyebrow">SATRN NEWSROOM</div><h1>Latest News</h1><p>Reporting and analysis from the SATRN News editorial desks.</p><div class="stories-grid">{published.map(article => <StoryCard article={article} />)}</div>{published.length === 0 && <div class="empty-state">News articles will appear here after editorial review and publication.</div>}</div></Layout>
+<Layout title="Latest News" active="/news/"><div class="container archive-header"><div class="kicker">SATRN NEWSROOM</div><h1>Latest News</h1><p>Independent reporting, international affairs, finance, investigations and technology.</p></div><div class="container section archive-content">{published.length > 0?<div class="cards-5">{published.map(a=><StoryCard article={a}/>)}</div>:<div class="launch-note"><strong>Editorial content is being prepared.</strong><p>Published and verified SATRN News reporting will appear here.</p></div>}</div></Layout>

@@ -2,18 +2,54 @@
 import Layout from '../layouts/SiteLayout.astro';
 import StoryCard from '../components/StoryCard.astro';
 import articles from '../data/articles.json';
-const published = articles.filter(a => a.status === 'published').sort((a,b) => b.date.localeCompare(a.date));
-const top = published[0];
+import { homeSections, storyBelongsTo } from '../data/sections.js';
+const published = articles.filter(a=>a.status === 'published').sort((a,b)=>b.date.localeCompare(a.date));
+const lead = published[0];
+const side = published.slice(1,5);
+const trending = [...published].sort((a,b)=>(b.trendingScore||0)-(a.trendingScore||0)).slice(0,6);
+const janus = published.filter(a=>storyBelongsTo(a,'janus-intelligence')).slice(0,4);
+const audio = published.filter(a=>a.audioUrl).slice(0,3);
 ---
 <Layout active="/">
-  <div class="wrap">
-    <section class="home-intro"><div class="eyebrow">SATRN NEWS · DIGITAL EDITION</div><h1>Independent reporting.<span> Global perspective.</span></h1><p>News, investigations, finance, science and technology — from the SATRN News digital newsroom.</p></section>
-    <section class="section-block" aria-label="Top stories"><div class="section-heading"><h2>Top Stories</h2><span>NEWS DESK</span></div>
-      {top ? <div class="lead-story"><div><div class="eyebrow">{top.category} · {top.date}</div><h2><a href={'/news/' + top.slug + '/'}>{top.title}</a></h2><p>{top.summary}</p><a class="primary-link" href={'/news/' + top.slug + '/'}>Read the full report <span aria-hidden="true">→</span></a></div>{top.image && <img src={top.image} alt={top.imageAlt || ''} />}</div> : <div class="empty-state"><strong>The new SATRN News newsroom is being prepared.</strong><p>No articles are publicly published in this starter. Approved reporting will appear here after migration.</p></div>}
-    </section>
-    <section class="section-block"><div class="section-heading"><h2>Latest Reporting</h2><span>ALL DESKS</span></div>
-      {published.length > 1 ? <div class="stories-grid">{published.slice(1,7).map(article => <StoryCard article={article} />)}</div> : <p class="muted">Approved articles will populate this section after migration.</p>}
-    </section>
-    <section class="feature-grid"><a href="/newspapers/" class="feature"><div class="eyebrow">THE DAILY SOURCE</div><h2>Digital Newspaper Archive</h2><p>Preserve full daily issues, special investigative editions and their original page designs.</p><span>Browse editions →</span></a><a href="/live/" class="feature dark"><div class="eyebrow">SATRN.TV</div><h2>Broadcast & Live Programming</h2><p>Connect live shows, newsroom anchors and original SATRN productions.</p><span>Explore programming →</span></a></section>
-  </div>
+ <div class="container">
+  <section class="hero" aria-label="Top news">
+   {lead ? <article class="hero-lead">
+      {lead.image && <img src={lead.image} alt={lead.imageAlt||''}/>}
+      <div class="hero-overlay"><div class="kicker">{lead.category}</div><h1><a href={'/news/'+lead.slug+'/'}>{lead.title}</a></h1><p>{lead.summary}</p><div class="meta">{lead.date} · {lead.storyType||'News'}</div></div>
+    </article> :
+    <div class="hero-lead hero-staging"><div class="hero-overlay"><div class="kicker">SATRN NEWS · WEBSITE REBUILD</div><h1>Independent journalism for a changing world.</h1><p>The SATRN News v2 digital newsroom is being prepared. Approved reporting will appear here when publishing begins.</p><div class="meta">QUESTION EVERYTHING.</div></div></div>}
+   <div class="hero-grid">
+     {side.length ? side.map(a=><article class="story-card">
+       {a.image && <img src={a.image} alt={a.imageAlt||''}/>}
+       <div class="story-overlay"><div class="kicker">{a.category}</div><h3><a href={'/news/'+a.slug+'/'}>{a.title}</a></h3></div>
+     </article>) : [
+       ['World News','world-news'],['Politics','us-politics'],['Business','business'],['Technology','technology']
+     ].map(([name,slug])=><a class="story-card story-placeholder" href={'/'+slug+'/'}><div class="story-overlay"><div class="kicker">SATRN NEWS DESK</div><h3>{name} ↗</h3></div></a>)}
+   </div>
+  </section>
+  {published.length > 0 && <div class="top-headlines"><strong>TOP HEADLINES</strong>{published.slice(0,6).map(a=><article><a href={'/news/'+a.slug+'/'}>{a.title}</a></article>)}</div>}
+  <section class="section"><div class="section-title"><h2>Latest / Trending</h2></div>
+   {published.length > 0 ? <div class="ranked">
+    <div><h3>Latest</h3><ol>{published.slice(0,6).map(a=><li><a href={'/news/'+a.slug+'/'}>{a.title}</a></li>)}</ol></div>
+    <div><h3>Trending</h3><ol>{trending.map(a=><li><a href={'/news/'+a.slug+'/'}>{a.title}</a></li>)}</ol></div>
+   </div> : <div class="launch-note"><strong>THE GLOBAL NEWSROOM</strong><p>Original reporting, contextual analysis and special investigations will populate the news desk after editorial verification.</p><a href="/news/">Visit the newsroom →</a></div>}
+  </section>
+  <section class="section"><div class="section-title"><h2>Explore SATRN News</h2></div>
+    <div class="desks">{homeSections.map(([slug,name])=><a href={'/'+slug+'/'}>{name}<span aria-hidden="true">↗</span></a>)}</div>
+  </section>
+  {homeSections.map(([slug,name]) => {
+    const items = published.filter(a=>storyBelongsTo(a,slug)).slice(0,5);
+    return items.length > 0 && <section class="section"><div class="section-title"><h2>{name}</h2><a href={'/'+slug+'/'}>View all →</a></div><div class="cards-5">{items.map(a=><StoryCard article={a}/>)}</div></section>;
+  })}
+ </div>
+ <section class="section-dark"><div class="container"><div class="section-title"><div><h2>JANUS INTELLIGENCE</h2><p>Analysis, assessment, watch, scenario and outlook.</p></div><a href="/janus-intelligence/">All intelligence →</a></div>
+ {janus.length > 0 ? <div class="cards-4">{janus.map(a=><article class="janus-card"><a href={'/news/'+a.slug+'/'}>{a.image && <div class="thumb"><img src={a.image} alt={a.imageAlt||''} loading="lazy"/></div>}<div class="body"><div class="kicker">{a.storyType||'Analysis'}</div><h3>{a.title}</h3></div></a></article>)}</div> :
+ <p class="janus-note">SATRN News will publish clearly attributed intelligence reports and evidence-based analyses here following editorial approval.</p>}
+ </div></section>
+ <div class="container">
+ {audio.length > 0 && <section class="section"><div class="section-title"><h2>SATRN Audio</h2><a href="/satrn-audio/">Listen to all →</a></div><div class="cards-3">{audio.map(a=><article class="audio-player"><div class="kicker">SATRN AUDIO</div><h3>{a.title}</h3><audio controls preload="none" src={a.audioUrl}>Your browser does not support audio.</audio></article>)}</div></section>}
+ <section class="section"><div class="network-bridge"><div><div class="kicker">SATRN NETWORK</div><h2>Watch SATRN.TV</h2><p>Live television, original programs, breaking video coverage and on-demand SATRN programming live on the separate SATRN.TV network website.</p><a class="button" href="https://satrn.tv/" target="_blank" rel="noopener noreferrer">Go to SATRN.TV ↗</a></div><div><strong>News website:</strong> SATRNNews.com<br/><strong>Television network:</strong> SATRN.TV</div></div></section>
+ <section class="section"><div class="newsletter"><div class="kicker">SATRN DAILY BRIEF</div><h2>QUESTION EVERYTHING.</h2><p>Important developments, context and analysis from SATRN News.</p><small>Newsletter subscriptions will open when the verified delivery service is connected. No email addresses are being collected on this staging site.</small></div></section>
+ {published.length > 6 && <section class="section"><div class="section-title"><h2>More News</h2><a href="/news/">All news →</a></div><div class="cards-5">{published.slice(6,11).map(a=><StoryCard article={a}/>)}</div></section>}
+ </div>
 </Layout>
