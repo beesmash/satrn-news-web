@@ -1,0 +1,6 @@
+---
+import Layout from '../../layouts/SiteLayout.astro';
+import editions from '../../data/editions.json';
+const released = editions.filter(e => e.status === 'published').sort((a,b)=>b.date.localeCompare(a.date));
+---
+<Layout title="Digital Newspapers" active="/newspapers/"><div class="wrap inner-page"><div class="eyebrow">DAILY SOURCE · SPECIAL INVESTIGATIONS</div><h1>Digital Newspapers</h1><p>Our newspaper archive will present complete daily editions and special reports using their original layouts.</p><div class="stories-grid">{released.map(edition => <article class="story-card"><div class="eyebrow">{edition.date} · {edition.pages} PAGES</div><h3>{edition.title}</h3><p>{edition.summary}</p><a class="text-link" href={edition.url} target="_blank" rel="noopener noreferrer">Open full edition ↗</a></article>)}</div>{released.length === 0 && <div class="empty-state">No editions have been published to this archive yet. Existing newspaper files will be migrated intact.</div>}</div></Layout>

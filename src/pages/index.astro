@@ -1,0 +1,19 @@
+---
+import Layout from '../layouts/SiteLayout.astro';
+import StoryCard from '../components/StoryCard.astro';
+import articles from '../data/articles.json';
+const published = articles.filter(a => a.status === 'published').sort((a,b) => b.date.localeCompare(a.date));
+const top = published[0];
+---
+<Layout active="/">
+  <div class="wrap">
+    <section class="home-intro"><div class="eyebrow">SATRN NEWS · DIGITAL EDITION</div><h1>Independent reporting.<span> Global perspective.</span></h1><p>News, investigations, finance, science and technology — from the SATRN News digital newsroom.</p></section>
+    <section class="section-block" aria-label="Top stories"><div class="section-heading"><h2>Top Stories</h2><span>NEWS DESK</span></div>
+      {top ? <div class="lead-story"><div><div class="eyebrow">{top.category} · {top.date}</div><h2><a href={'/news/' + top.slug + '/'}>{top.title}</a></h2><p>{top.summary}</p><a class="primary-link" href={'/news/' + top.slug + '/'}>Read the full report <span aria-hidden="true">→</span></a></div>{top.image && <img src={top.image} alt={top.imageAlt || ''} />}</div> : <div class="empty-state"><strong>The new SATRN News newsroom is being prepared.</strong><p>No articles are publicly published in this starter. Approved reporting will appear here after migration.</p></div>}
+    </section>
+    <section class="section-block"><div class="section-heading"><h2>Latest Reporting</h2><span>ALL DESKS</span></div>
+      {published.length > 1 ? <div class="stories-grid">{published.slice(1,7).map(article => <StoryCard article={article} />)}</div> : <p class="muted">Approved articles will populate this section after migration.</p>}
+    </section>
+    <section class="feature-grid"><a href="/newspapers/" class="feature"><div class="eyebrow">THE DAILY SOURCE</div><h2>Digital Newspaper Archive</h2><p>Preserve full daily issues, special investigative editions and their original page designs.</p><span>Browse editions →</span></a><a href="/live/" class="feature dark"><div class="eyebrow">SATRN.TV</div><h2>Broadcast & Live Programming</h2><p>Connect live shows, newsroom anchors and original SATRN productions.</p><span>Explore programming →</span></a></section>
+  </div>
+</Layout>

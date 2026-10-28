@@ -1,0 +1,12 @@
+---
+import Layout from '../../layouts/SiteLayout.astro';
+import StoryCard from '../../components/StoryCard.astro';
+import articles from '../../data/articles.json';
+export function getStaticPaths() {
+  const sections = { world:'World', politics:'Politics', business:'Business', technology:'Technology', investigations:'Investigations' };
+  return Object.entries(sections).map(([section,name]) => ({ params:{section}, props:{name} }));
+}
+const { name } = Astro.props;
+const published = articles.filter(a => a.status === 'published' && a.category.toLowerCase() === name.toLowerCase()).sort((a,b) => b.date.localeCompare(a.date));
+---
+<Layout title={name} active={'/' + Astro.params.section + '/'}><div class="wrap inner-page"><div class="eyebrow">SATRN NEWS · REPORTING DESK</div><h1>{name}</h1><p>The latest SATRN News coverage and investigations.</p><div class="stories-grid">{published.map(article => <StoryCard article={article} />)}</div>{published.length === 0 && <div class="empty-state">There are no published stories in this section yet.</div>}</div></Layout>

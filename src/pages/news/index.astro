@@ -1,0 +1,7 @@
+---
+import Layout from '../../layouts/SiteLayout.astro';
+import StoryCard from '../../components/StoryCard.astro';
+import articles from '../../data/articles.json';
+const published = articles.filter(a=>a.status==='published').sort((a,b)=>b.date.localeCompare(a.date));
+---
+<Layout title="News" active="/news/"><div class="wrap inner-page"><div class="eyebrow">SATRN NEWSROOM</div><h1>Latest News</h1><p>Reporting and analysis from the SATRN News editorial desks.</p><div class="stories-grid">{published.map(article => <StoryCard article={article} />)}</div>{published.length === 0 && <div class="empty-state">News articles will appear here after editorial review and publication.</div>}</div></Layout>
