@@ -23,9 +23,9 @@ npm run build
 npm run preview
 ```
 
-## Cloudflare Pages deployment
+## Cloudflare Workers deployment
 
-Connect GitHub repository `beesmash/satrn-news-web`, production branch `main`, framework `Astro`, build command `npm run build`, output directory `dist`, Node.js `24`.
+The current live preview uses Cloudflare Workers, not Cloudflare Pages. Keep GitHub repository `beesmash/satrn-news-web` connected to Workers Builds on branch `main`, with build command `npm run build` and deploy command `npx wrangler deploy`. Node.js 24. The `wrangler.jsonc` assets directory is `./dist`.
 
 **Staging only:** `public/robots.txt` and `public/_headers` block search indexing until production review.
 
@@ -56,7 +56,7 @@ The site only renders articles with `status: "published"` in `src/data/articles.
 }
 ```
 
-The site currently has **zero imported articles and editions**. All editorial content requires review before publishing. Add a full newspaper PDF to `public/editions` and a matching `src/data/editions.json` entry to publish a paper.
+The site currently has **zero imported articles and editions**. All editorial content requires review before publishing. Upload approved paper pages and PDF to the private R2 bucket using the documented workflow; after the public media domain is verified, add a reviewed `src/data/editions.json` record to publish an issue.
 
 ## Not yet implemented
 
@@ -65,7 +65,7 @@ The site currently has **zero imported articles and editions**. All editorial co
 - JANUS/MORGAN publishing automation and verification gate.
 - SATRN.TV live feed infrastructure.
 - Bluehost/WordPress content migration, historical URLs/redirects, domain cutover and email DNS migration.
-- Final official SVG/PNG logo and original newspaper page-image viewer.
+- Final editorial signoff on brand assets; real newspaper page-image content still awaits import.
 
 ## Safety
 

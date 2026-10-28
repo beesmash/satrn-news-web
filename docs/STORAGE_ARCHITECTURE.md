@@ -14,9 +14,9 @@ Compressed cover thumbnails, licensed article images, approved page JPG/WEBP pre
 **Cloudflare Stream (future) — public streaming**
 Use an actual streaming service for 24/7 SATRN TV and long-form video, not Dropbox shared-link URLs or public R2 downloads as the video player backend.
 
-## Suggested Dropbox folder organization (not created)
+## Dropbox folder organization (created October 28, 2026)
 
-SATRN_NEWS_EDITORIAL/
+/Erick Brown/SATRN NEWS EDITORIAL/
   00_INBOX/
   01_RESEARCH_AND_SOURCES/
   02_DRAFTS/
@@ -25,7 +25,7 @@ SATRN_NEWS_EDITORIAL/
   05_PHOTOS_MASTERS/
   06_VIDEO_MASTERS/
   07_AUDIO_MASTERS/
-  08_NEWSPAPERS/DAILY_SOURCE/YYYY/MM/DD/
+  08_NEWSPAPERS/DAILY_SOURCE/  (date subfolders created as issues arrive)
   08_NEWSPAPERS/SPECIAL_INVESTIGATIONS/
   09_APPROVED_EXPORTS/
   10_CORRECTIONS_AND_AUDIT/
