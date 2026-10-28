@@ -1,0 +1,11 @@
+---
+import PreviewCard from './PreviewCard.astro';
+const {title,slug,stories=[],type='list'}=Astro.props;
+const all='/'+slug+'/';
+---
+<section class="news-group" aria-label={title}>
+ <div class="section-title"><h2>{title}</h2><a href={all}>View All →</a></div>
+ <div class={'group-content '+(type==='feature'?'group-feature':'')}>
+  {stories.map((story,i)=><PreviewCard story={story} variant={i===0?'thumbnail':'compact'} showDate={true}/>)}
+ </div>
+</section>

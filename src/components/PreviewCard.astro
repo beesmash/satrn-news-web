@@ -1,0 +1,16 @@
+---
+const { story, variant='standard', showDate=true, showSummary=false }=Astro.props;
+const href=story.slug?'/news/'+story.slug+'/':'/'+(story.section||'news')+'/';
+---
+<article class={'pv-card pv-'+variant}>
+ <a class="pv-media" href={href} aria-label={story.preview?'Explore '+story.category+' desk':story.title}>
+  {story.image && <img src={story.image} loading="lazy" alt="" referrerpolicy="no-referrer"/>}
+  {variant==='video' && <span class="video-play" aria-hidden="true">▶</span>}
+ </a>
+ <div class="pv-copy">
+  <span class="pv-category">{story.category}</span>
+  <h3><a href={href}>{story.title}</a></h3>
+  {showDate && <div class="pv-meta">{story.preview?'ILLUSTRATIVE · ':''}{story.date}</div>}
+  {showSummary && story.summary && <p>{story.summary}</p>}
+ </div>
+</article>
