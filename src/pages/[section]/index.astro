@@ -3,7 +3,8 @@ import Layout from '../../layouts/SiteLayout.astro';
 import StoryCard from '../../components/StoryCard.astro';
 import articles from '../../data/articles.json';
 import { sections, storyBelongsTo } from '../../data/sections.js';
-const policies=[
+export function getStaticPaths() {
+ const policies=[
  ['contact','Contact','Editorial contact information will be published after the newsroom contact channel is verified.'],
  ['editorial-standards','Editorial Standards','SATRN News requires attribution, independent verification and editorial approval before publication. A full editorial policy is being prepared.'],
  ['corrections-policy','Corrections Policy','A formal corrections process and contact channel will be published before public launch.'],
@@ -11,7 +12,6 @@ const policies=[
  ['privacy-policy','Privacy Policy','The full privacy policy will be published before launch. This staging website does not collect newsletter subscriptions.'],
  ['government-resources','Government Resources','A curated index of official United States government resources is planned.']
 ];
-export function getStaticPaths() {
  return [...sections,['investigations','Investigations'],['world','World News'],['politics','U.S. Politics'],...policies.map(([slug,name])=>[slug,name])]
   .map(([slug,name])=>({params:{section:slug},props:{name,filterSlug: slug==='world'?'world-news':slug==='politics'?'us-politics':slug,policyDescription:policies.find(p=>p[0]===slug)?.[2]}}));
 }
